@@ -218,29 +218,35 @@
         /* Стебель растёт, цветок едет вверх вместе со стеблем */
         .stage-0 .stem { height: 0; }
         .stage-0 .flower { bottom: 0; opacity: 0; }
+        .stage-0 .leaf { opacity: 0; }
 
         .stage-1 .stem { height: 40px; }
-        .stage-1 .flower { bottom: 35px; opacity: 1; }
+        .stage-1 .flower { bottom: 35px; opacity: 0.5; }
+        .stage-1 .flower-center { width: 10px; height: 10px; }
+        .stage-1 .leaf { opacity: 0; }
 
         .stage-2 .stem { height: 80px; }
-        .stage-2 .flower { bottom: 75px; opacity: 1; }
-        .stage-2 .leaf.left { bottom: 40px; opacity: 1; width: 35px; height: 35px; }
-        .stage-2 .leaf.right { bottom: 30px; opacity: 1; width: 35px; height: 35px; }
+        .stage-2 .flower { bottom: 75px; opacity: 0.7; }
+        .stage-2 .flower-center { width: 15px; height: 15px; }
+        .stage-2 .leaf.left { bottom: 40px; opacity: 1; width: 30px; height: 30px; }
+        .stage-2 .leaf.right { bottom: 30px; opacity: 1; width: 30px; height: 30px; }
 
         .stage-3 .stem { height: 130px; }
-        .stage-3 .flower { bottom: 125px; opacity: 1; }
-        .stage-3 .leaf.left { bottom: 60px; opacity: 1; width: 35px; height: 35px; }
-        .stage-3 .leaf.right { bottom: 50px; opacity: 1; width: 35px; height: 35px; }
+        .stage-3 .flower { bottom: 125px; opacity: 0.8; }
+        .stage-3 .flower-center { width: 20px; height: 20px; }
+        .stage-3 .leaf.left { bottom: 80px; opacity: 1; width: 35px; height: 35px; }
+        .stage-3 .leaf.right { bottom: 65px; opacity: 1; width: 35px; height: 35px; }
 
         .stage-4 .stem { height: 180px; }
-        .stage-4 .flower { bottom: 175px; opacity: 1; }
-        .stage-4 .leaf.left { bottom: 80px; opacity: 1; width: 35px; height: 35px; }
-        .stage-4 .leaf.right { bottom: 70px; opacity: 1; width: 35px; height: 35px; }
+        .stage-4 .flower { bottom: 175px; opacity: 0.9; }
+        .stage-4 .flower-center { width: 25px; height: 25px; }
+        .stage-4 .leaf.left { bottom: 120px; opacity: 1; width: 35px; height: 35px; }
+        .stage-4 .leaf.right { bottom: 100px; opacity: 1; width: 35px; height: 35px; }
 
         .stage-5 .stem { height: 230px; }
         .stage-5 .flower { bottom: 225px; opacity: 1; }
-        .stage-5 .leaf.left { bottom: 100px; opacity: 1; width: 35px; height: 35px; }
-        .stage-5 .leaf.right { bottom: 90px; opacity: 1; width: 35px; height: 35px; }
+        .stage-5 .leaf.left { bottom: 150px; opacity: 1; width: 35px; height: 35px; }
+        .stage-5 .leaf.right { bottom: 130px; opacity: 1; width: 35px; height: 35px; }
         .stage-5 .soil { opacity: 0; } /* Земля исчезает, когда цветок вырастает */
 
         /* Цветение */
