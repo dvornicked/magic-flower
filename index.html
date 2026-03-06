@@ -43,11 +43,23 @@
         .garden {
             position: relative;
             width: 300px;
-            height: 400px;
+            height: 500px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-end;
+        }
+
+        /* Контейнер для растения (стебель, листья, цветок) */
+        .plant-container {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 400px;
+            pointer-events: none;
+            z-index: 4;
         }
 
         /* Цветочный горшок */
@@ -89,7 +101,7 @@
         /* Земля в горшке */
         .soil {
             position: absolute;
-            top: -10px;
+            bottom: 90px;
             left: 50%;
             transform: translateX(-50%);
             width: 100px;
@@ -97,33 +109,34 @@
             background: #3d2817;
             border-radius: 50%;
             z-index: 5;
+            transition: opacity 0.3s ease;
         }
 
-        /* Стебель */
+        /* Стебель - растёт из центра */
         .stem {
             position: absolute;
-            bottom: 90px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 8px;
+            height: 0;
             background: linear-gradient(90deg, #228B22, #32CD32);
             border-radius: 4px;
             transform-origin: bottom center;
             transition: height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 4;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
         }
 
-        /* Листья */
+        /* Листья - на стебле */
         .leaf {
             position: absolute;
             width: 0;
             height: 0;
             background: linear-gradient(135deg, #32CD32, #228B22);
             border-radius: 0 50% 0 50%;
-            transform-origin: bottom left;
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             opacity: 0;
+            transform-origin: bottom left;
         }
 
         .leaf.left {
@@ -137,21 +150,26 @@
         }
 
         .leaf.show {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             opacity: 1;
         }
 
-        /* Цветок */
+        /* Цветок - на вершине стебля */
         .flower {
             position: absolute;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             justify-content: center;
             align-items: center;
             transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 6;
+            opacity: 0;
+        }
+
+        .flower.show {
+            opacity: 1;
         }
 
         .flower-center {
@@ -197,25 +215,33 @@
         }
 
         /* Этапы роста */
+        /* Стебель растёт, цветок едет вверх вместе со стеблем */
         .stage-0 .stem { height: 0; }
-        .stage-0 .flower { bottom: 90px; }
+        .stage-0 .flower { bottom: 0; opacity: 0; }
 
-        .stage-1 .stem { height: 30px; }
-        .stage-1 .flower { bottom: 115px; }
+        .stage-1 .stem { height: 40px; }
+        .stage-1 .flower { bottom: 35px; opacity: 1; }
 
-        .stage-2 .stem { height: 60px; }
-        .stage-2 .flower { bottom: 145px; }
-        .stage-2 .leaf.left { bottom: 130px; }
-        .stage-2 .leaf.right { bottom: 115px; }
+        .stage-2 .stem { height: 80px; }
+        .stage-2 .flower { bottom: 75px; opacity: 1; }
+        .stage-2 .leaf.left { bottom: 40px; opacity: 1; width: 35px; height: 35px; }
+        .stage-2 .leaf.right { bottom: 30px; opacity: 1; width: 35px; height: 35px; }
 
-        .stage-3 .stem { height: 100px; }
-        .stage-3 .flower { bottom: 185px; }
+        .stage-3 .stem { height: 130px; }
+        .stage-3 .flower { bottom: 125px; opacity: 1; }
+        .stage-3 .leaf.left { bottom: 60px; opacity: 1; width: 35px; height: 35px; }
+        .stage-3 .leaf.right { bottom: 50px; opacity: 1; width: 35px; height: 35px; }
 
-        .stage-4 .stem { height: 150px; }
-        .stage-4 .flower { bottom: 235px; }
+        .stage-4 .stem { height: 180px; }
+        .stage-4 .flower { bottom: 175px; opacity: 1; }
+        .stage-4 .leaf.left { bottom: 80px; opacity: 1; width: 35px; height: 35px; }
+        .stage-4 .leaf.right { bottom: 70px; opacity: 1; width: 35px; height: 35px; }
 
-        .stage-5 .stem { height: 200px; }
-        .stage-5 .flower { bottom: 285px; }
+        .stage-5 .stem { height: 230px; }
+        .stage-5 .flower { bottom: 225px; opacity: 1; }
+        .stage-5 .leaf.left { bottom: 100px; opacity: 1; width: 35px; height: 35px; }
+        .stage-5 .leaf.right { bottom: 90px; opacity: 1; width: 35px; height: 35px; }
+        .stage-5 .soil { opacity: 0; } /* Земля исчезает, когда цветок вырастает */
 
         /* Цветение */
         .blooming .flower-center {
@@ -317,18 +343,24 @@
     <div class="hint">Кликай по экрану, чтобы вырастить цветок!</div>
     
     <div class="garden" id="garden">
-        <div class="flower" id="flower">
-            <div class="petal"></div>
-            <div class="petal"></div>
-            <div class="petal"></div>
-            <div class="petal"></div>
-            <div class="petal"></div>
-            <div class="flower-center"></div>
+        <!-- Контейнер для всего растения -->
+        <div class="plant-container" id="plant-container">
+            <div class="stem" id="stem"></div>
+            
+            <div class="leaf left" id="leaf-left"></div>
+            <div class="leaf right" id="leaf-right"></div>
+            
+            <div class="flower" id="flower">
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="flower-center"></div>
+            </div>
         </div>
-        <div class="stem" id="stem"></div>
-        <div class="leaf left" id="leaf-left"></div>
-        <div class="leaf right" id="leaf-right"></div>
-        <div class="soil"></div>
+        
+        <div class="soil" id="soil"></div>
         <div class="pot" id="pot"></div>
     </div>
 
@@ -339,8 +371,8 @@
         const maxStage = 5;
         const garden = document.getElementById('garden');
         const pot = document.getElementById('pot');
-        const leafLeft = document.getElementById('leaf-left');
-        const leafRight = document.getElementById('leaf-right');
+        const flower = document.getElementById('flower');
+        const soil = document.getElementById('soil');
         const resetBtn = document.getElementById('reset-btn');
         const hint = document.querySelector('.hint');
 
@@ -395,10 +427,9 @@
             // Обновляем класс этапа
             garden.className = 'garden stage-' + stage;
             
-            // Показываем листья на этапе 2+
-            if (stage >= 2) {
-                leafLeft.classList.add('show');
-                leafRight.classList.add('show');
+            // Показываем цветок начиная с этапа 1
+            if (stage >= 1) {
+                flower.classList.add('show');
             }
 
             // Полное цветение
@@ -428,8 +459,7 @@
         function reset() {
             stage = 0;
             garden.className = 'garden stage-0';
-            leafLeft.classList.remove('show');
-            leafRight.classList.remove('show');
+            flower.classList.remove('show');
             resetBtn.classList.remove('show');
             hint.textContent = messages[0];
         }
