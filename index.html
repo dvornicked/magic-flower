@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Волшебный цветок</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .hint {
+            position: absolute;
+            top: 30px;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            opacity: 0.9;
+            animation: pulse 2s ease-in-out infinite;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.9; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.98); }
+        }
+
+        .garden {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        /* Цветочный горшок */
+        .pot {
+            width: 120px;
+            height: 100px;
+            background: linear-gradient(145deg, #8B4513, #A0522D);
+            border-radius: 10px 10px 40px 40px;
+            position: relative;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.3),
+                inset 0 -5px 15px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .pot::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -10px;
+            right: -10px;
+            height: 25px;
+            background: linear-gradient(145deg, #A0522D, #8B4513);
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .pot::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10px;
+            right: 10px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+            border-radius: 10px 10px 40px 40px;
+        }
+
+        /* Земля в горшке */
+        .soil {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 20px;
+            background: #3d2817;
+            border-radius: 50%;
+            z-index: 5;
+        }
+
+        /* Стебель */
+        .stem {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            background: linear-gradient(90deg, #228B22, #32CD32);
+            border-radius: 4px;
+            transform-origin: bottom center;
+            transition: height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 4;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        /* Листья */
+        .leaf {
+            position: absolute;
+            width: 0;
+            height: 0;
+            background: linear-gradient(135deg, #32CD32, #228B22);
+            border-radius: 0 50% 0 50%;
+            transform-origin: bottom left;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+        }
+
+        .leaf.left {
+            left: 50%;
+            transform: translateX(-100%) rotate(-45deg);
+        }
+
+        .leaf.right {
+            left: 50%;
+            transform: rotate(45deg);
+        }
+
+        .leaf.show {
+            width: 40px;
+            height: 40px;
+            opacity: 1;
+        }
+
+        /* Цветок */
+        .flower {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 6;
+        }
+
+        .flower-center {
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, #FFD700, #FFA500);
+            border-radius: 50%;
+            position: absolute;
+            z-index: 2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.5s ease;
+        }
+
+        .petal {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-radius: 50% 50% 50% 0;
+            transform-origin: bottom left;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+        }
+
+        /* Частицы при клике */
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float-up 1s ease-out forwards;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Этапы роста */
+        .stage-0 .stem { height: 0; }
+        .stage-0 .flower { bottom: 90px; }
+
+        .stage-1 .stem { height: 30px; }
+        .stage-1 .flower { bottom: 115px; }
+
+        .stage-2 .stem { height: 60px; }
+        .stage-2 .flower { bottom: 145px; }
+        .stage-2 .leaf.left { bottom: 130px; }
+        .stage-2 .leaf.right { bottom: 115px; }
+
+        .stage-3 .stem { height: 100px; }
+        .stage-3 .flower { bottom: 185px; }
+
+        .stage-4 .stem { height: 150px; }
+        .stage-4 .flower { bottom: 235px; }
+
+        .stage-5 .stem { height: 200px; }
+        .stage-5 .flower { bottom: 285px; }
+
+        /* Цветение */
+        .blooming .flower-center {
+            width: 30px;
+            height: 30px;
+        }
+
+        .blooming .petal:nth-child(1) { 
+            width: 50px; height: 50px; 
+            transform: rotate(0deg) translateX(25px); 
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            opacity: 1;
+        }
+        .blooming .petal:nth-child(2) { 
+            width: 50px; height: 50px; 
+            transform: rotate(72deg) translateX(25px); 
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            opacity: 1;
+        }
+        .blooming .petal:nth-child(3) { 
+            width: 50px; height: 50px; 
+            transform: rotate(144deg) translateX(25px); 
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            opacity: 1;
+        }
+        .blooming .petal:nth-child(4) { 
+            width: 50px; height: 50px; 
+            transform: rotate(216deg) translateX(25px); 
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            opacity: 1;
+        }
+        .blooming .petal:nth-child(5) { 
+            width: 50px; height: 50px; 
+            transform: rotate(288deg) translateX(25px); 
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            opacity: 1;
+        }
+
+        /* Конфетти при полном цветении */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Кнопка сброса */
+        .reset-btn {
+            position: absolute;
+            bottom: 30px;
+            padding: 12px 30px;
+            background: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            color: #764ba2;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .reset-btn.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Анимация тряски горшка */
+        .shake {
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px) rotate(-2deg); }
+            75% { transform: translateX(5px) rotate(2deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="hint">Кликай по экрану, чтобы вырастить цветок!</div>
+    
+    <div class="garden" id="garden">
+        <div class="flower" id="flower">
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="flower-center"></div>
+        </div>
+        <div class="stem" id="stem"></div>
+        <div class="leaf left" id="leaf-left"></div>
+        <div class="leaf right" id="leaf-right"></div>
+        <div class="soil"></div>
+        <div class="pot" id="pot"></div>
+    </div>
+
+    <button class="reset-btn" id="reset-btn">🌱 Вырастить новый цветок</button>
+
+    <script>
+        let stage = 0;
+        const maxStage = 5;
+        const garden = document.getElementById('garden');
+        const pot = document.getElementById('pot');
+        const leafLeft = document.getElementById('leaf-left');
+        const leafRight = document.getElementById('leaf-right');
+        const resetBtn = document.getElementById('reset-btn');
+        const hint = document.querySelector('.hint');
+
+        const messages = [
+            "Кликай по экрану, чтобы вырастить цветок!",
+            "Отлично! Продолжай кликать...",
+            "Растет! Еще немного...",
+            "Уже видны листочки!",
+            "Скоро расцветет!",
+            "Последний рывок!"
+        ];
+
+        function createParticle(x, y) {
+            const colors = ['#FFD700', '#FF69B4', '#32CD32', '#87CEEB', '#FFA500'];
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 1000);
+        }
+
+        function createConfetti() {
+            const colors = ['#FFD700', '#FF69B4', '#32CD32', '#87CEEB', '#FFA500', '#FF1493', '#00CED1'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+        function shakePot() {
+            pot.classList.add('shake');
+            setTimeout(() => pot.classList.remove('shake'), 500);
+        }
+
+        function grow(e) {
+            if (stage >= maxStage) return;
+
+            stage++;
+            
+            // Обновляем класс этапа
+            garden.className = 'garden stage-' + stage;
+            
+            // Показываем листья на этапе 2+
+            if (stage >= 2) {
+                leafLeft.classList.add('show');
+                leafRight.classList.add('show');
+            }
+
+            // Полное цветение
+            if (stage === maxStage) {
+                garden.classList.add('blooming');
+                createConfetti();
+                hint.textContent = "🌸 Ваш цветок расцвел! 🌸";
+                resetBtn.classList.add('show');
+            } else {
+                hint.textContent = messages[stage];
+            }
+
+            // Эффекты
+            shakePot();
+            if (e) {
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        createParticle(
+                            e.clientX + (Math.random() - 0.5) * 50,
+                            e.clientY + (Math.random() - 0.5) * 50
+                        );
+                    }, i * 50);
+                }
+            }
+        }
+
+        function reset() {
+            stage = 0;
+            garden.className = 'garden stage-0';
+            leafLeft.classList.remove('show');
+            leafRight.classList.remove('show');
+            resetBtn.classList.remove('show');
+            hint.textContent = messages[0];
+        }
+
+        document.body.addEventListener('click', grow);
+        resetBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            reset();
+        });
+
+        // Инициализация
+        garden.classList.add('stage-0');
+    </script>
+</body>
+</html>
