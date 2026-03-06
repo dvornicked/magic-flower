@@ -259,36 +259,25 @@
             height: 30px;
         }
 
-        .blooming .petal:nth-child(1) { 
-            width: 50px; height: 50px; 
-            transform: rotate(-90deg) translateX(25px); 
+        /* Общие стили для всех лепестков в цветении */
+        .blooming .petal {
+            width: 50px; 
+            height: 50px; 
+            left: 50%;
+            top: 50%;
+            margin-left: -25px;
+            margin-top: -50px;
             background: linear-gradient(135deg, #FF69B4, #FF1493);
             opacity: 1;
+            border-radius: 50% 50% 50% 5px;
+            transform-origin: 50% 100%;
         }
-        .blooming .petal:nth-child(2) { 
-            width: 50px; height: 50px; 
-            transform: rotate(-18deg) translateX(25px); 
-            background: linear-gradient(135deg, #FF69B4, #FF1493);
-            opacity: 1;
-        }
-        .blooming .petal:nth-child(3) { 
-            width: 50px; height: 50px; 
-            transform: rotate(54deg) translateX(25px); 
-            background: linear-gradient(135deg, #FF69B4, #FF1493);
-            opacity: 1;
-        }
-        .blooming .petal:nth-child(4) { 
-            width: 50px; height: 50px; 
-            transform: rotate(126deg) translateX(25px); 
-            background: linear-gradient(135deg, #FF69B4, #FF1493);
-            opacity: 1;
-        }
-        .blooming .petal:nth-child(5) { 
-            width: 50px; height: 50px; 
-            transform: rotate(198deg) translateX(25px); 
-            background: linear-gradient(135deg, #FF69B4, #FF1493);
-            opacity: 1;
-        }
+
+        .blooming .petal:nth-child(1) { transform: rotate(0deg); }
+        .blooming .petal:nth-child(2) { transform: rotate(72deg); }
+        .blooming .petal:nth-child(3) { transform: rotate(144deg); }
+        .blooming .petal:nth-child(4) { transform: rotate(216deg); }
+        .blooming .petal:nth-child(5) { transform: rotate(288deg); }
 
         /* Конфетти при полном цветении */
         .confetti {
