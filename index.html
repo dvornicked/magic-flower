@@ -188,9 +188,13 @@
             width: 0;
             height: 0;
             border-radius: 50% 50% 50% 0;
-            transform-origin: bottom left;
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             opacity: 0;
+            left: 50%;
+            top: 50%;
+            margin-left: 0;
+            margin-top: 0;
+            transform-origin: 0 0;
         }
 
         /* Частицы при клике */
@@ -249,7 +253,7 @@
         .stage-5 .leaf.right { bottom: 130px; opacity: 1; width: 35px; height: 35px; }
         .stage-5 .soil { opacity: 0; } /* Земля исчезает, когда цветок вырастает */
 
-        /* Цветение */
+        /* Цветение - лепестки равномерно вокруг центра */
         .blooming .flower-center {
             width: 30px;
             height: 30px;
@@ -257,31 +261,31 @@
 
         .blooming .petal:nth-child(1) { 
             width: 50px; height: 50px; 
-            transform: rotate(0deg) translateX(25px); 
+            transform: rotate(-90deg) translateX(25px); 
             background: linear-gradient(135deg, #FF69B4, #FF1493);
             opacity: 1;
         }
         .blooming .petal:nth-child(2) { 
             width: 50px; height: 50px; 
-            transform: rotate(72deg) translateX(25px); 
+            transform: rotate(-18deg) translateX(25px); 
             background: linear-gradient(135deg, #FF69B4, #FF1493);
             opacity: 1;
         }
         .blooming .petal:nth-child(3) { 
             width: 50px; height: 50px; 
-            transform: rotate(144deg) translateX(25px); 
+            transform: rotate(54deg) translateX(25px); 
             background: linear-gradient(135deg, #FF69B4, #FF1493);
             opacity: 1;
         }
         .blooming .petal:nth-child(4) { 
             width: 50px; height: 50px; 
-            transform: rotate(216deg) translateX(25px); 
+            transform: rotate(126deg) translateX(25px); 
             background: linear-gradient(135deg, #FF69B4, #FF1493);
             opacity: 1;
         }
         .blooming .petal:nth-child(5) { 
             width: 50px; height: 50px; 
-            transform: rotate(288deg) translateX(25px); 
+            transform: rotate(198deg) translateX(25px); 
             background: linear-gradient(135deg, #FF69B4, #FF1493);
             opacity: 1;
         }
